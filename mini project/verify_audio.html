@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FakeCheck | Audio Verification</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #070b18;
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+
+        .header {
+            width: 100%;
+            min-height: 90px;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid #202a43;
+            background: #0b1020;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #20d8e8;
+        }
+
+        .logo strong {
+            color: #7c5cff;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #20d8e8;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .back-link:hover {
+            color: #7c5cff;
+        }
+
+        /* MAIN CONTAINER */
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 50px auto;
+        }
+
+        /* MAIN CARD */
+
+        .audio-card {
+            background:
+                radial-gradient(
+                    circle at 90% 10%,
+                    #122642,
+                    transparent 35%
+                ),
+                #10172a;
+
+            border: 1px solid #27334e;
+            border-radius: 22px;
+            padding: 45px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        /* TITLE */
+
+        .title-section {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            margin-bottom: 18px;
+        }
+
+        .title-icon {
+            width: 75px;
+            height: 75px;
+            min-width: 75px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #17233f;
+            border-radius: 18px;
+            font-size: 36px;
+        }
+
+        .title-section h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .title-section p {
+            color: #8795b5;
+            line-height: 1.7;
+        }
+
+        .subtitle {
+            color: #8795b5;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        /* UPLOAD AREA */
+
+        .upload-box {
+            background: #0b1224;
+            border: 2px dashed #20a9d8;
+            border-radius: 18px;
+            min-height: 250px;
+            padding: 35px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-box:hover {
+            border-color: #7c5cff;
+            background: #101a32;
+        }
+
+        .upload-icon {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 42px;
+            background: #17233f;
+            border: 2px solid #20d8e8;
+            margin-bottom: 22px;
+            box-shadow: 0 0 20px rgba(32, 216, 232, 0.12);
+        }
+
+        .upload-box h2 {
+            font-size: 23px;
+            margin-bottom: 12px;
+        }
+
+        .upload-box p {
+            color: #8795b5;
+            font-size: 14px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-name {
+            margin-top: 15px;
+            color: #20d8e8;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        /* BUTTON */
+
+        .button-section {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .verify-btn {
+            padding: 17px 45px;
+            border: none;
+            border-radius: 12px;
+
+            background: linear-gradient(
+                90deg,
+                #20d8e8,
+                #7858ff
+            );
+
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 20px rgba(32, 216, 232, 0.12);
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(124, 92, 255, 0.25);
+        }
+
+        .verify-btn:disabled {
+            opacity: 0.65;
+            cursor: wait;
+            transform: none;
+        }
+
+        /* INFORMATION BOX */
+
+        .info-box {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: #0b152a;
+            border: 1px solid #244779;
+            border-radius: 14px;
+            margin-top: 35px;
+        }
+
+        .info-icon {
+            font-size: 27px;
+            color: #20d8e8;
+        }
+
+        .info-box p {
+            color: #9aaed4;
+            line-height: 1.7;
+        }
+
+        /* ERROR */
+
+        .error-box {
+            margin-top: 25px;
+            padding: 18px;
+            background: #351b29;
+            border: 1px solid #743047;
+            border-radius: 12px;
+            color: #ffb8c6;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        /* RESULT */
+
+        .result-card {
+            margin-top: 35px;
+            padding: 30px;
+            background: #0b1224;
+            border: 1px solid #27334e;
+            border-radius: 18px;
+            overflow-wrap: anywhere;
+        }
+
+        .result-card h2 {
+            font-size: 23px;
+            margin-bottom: 20px;
+        }
+
+        .result-card h3 {
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: #20d8e8;
+        }
+
+        .result-card p {
+            color: #a9b8d5;
+            line-height: 1.8;
+        }
+
+        .verdict {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin: 10px 0 20px;
+            font-size: 20px;
+            font-weight: bold;
+            background: #17233f;
+            color: #20d8e8;
+        }
+
+        .confidence {
+            font-size: 28px;
+            color: #20d8e8 !important;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .evidence-item {
+            margin-top: 18px;
+            padding: 18px;
+            background: #10172a;
+            border: 1px solid #27334e;
+            border-radius: 12px;
+        }
+
+        .evidence-item h4 {
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .small-note {
+            margin-top: 25px;
+            padding-top: 18px;
+            border-top: 1px solid #27334e;
+            font-size: 13px;
+            color: #8795b5 !important;
+        }
+
+        /* FOOTER LINKS */
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .footer-links a {
+            color: #20d8e8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer-links a:hover {
+            color: #7c5cff;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+
+            .header {
+                padding: 20px;
+            }
+
+            .logo {
+                font-size: 25px;
+            }
+
+            .container {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .audio-card {
+                padding: 22px;
+            }
+
+            .title-section {
+                align-items: flex-start;
+                gap: 14px;
+            }
+
+            .title-icon {
+                width: 55px;
+                height: 55px;
+                min-width: 55px;
+                font-size: 27px;
+            }
+
+            .title-section h1 {
+                font-size: 24px;
+            }
+
+            .title-section p {
+                font-size: 13px;
+            }
+
+            .upload-box {
+                min-height: 210px;
+                padding: 25px 12px;
+            }
+
+            .upload-box h2 {
+                font-size: 19px;
+            }
+
+            .verify-btn {
+                width: 100%;
+                padding: 16px;
+            }
+
+            .info-box {
+                align-items: flex-start;
+                gap: 12px;
+                padding: 15px;
+            }
+
+            .result-card {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="logo">
+            <span>Fake</span><strong>Check</strong>
+        </div>
+
+        <a href="{{ url_for('dashboard') }}" class="back-link">
+            ← Back to Dashboard
+        </a>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="container">
+
+        <section class="audio-card">
+
+            <!-- TITLE -->
+
+            <div class="title-section">
+
+                <div class="title-icon">
+                    🎙️
+                </div>
+
+                <div>
+
+                    <h1>Audio Verification</h1>
+
+                    <p>
+                        Verify spoken information using speech recognition.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <p class="subtitle">
+                Upload a WAV audio recording. FakeCheck converts the
+                speech into text and checks the extracted claim using
+                its current verification logic.
+            </p>
+
+
+            <!-- UPLOAD FORM -->
+
+            <form
+                method="POST"
+                action="{{ url_for('verify_audio') }}"
+                enctype="multipart/form-data"
+                id="audioForm"
+            >
+
+                <label for="audio" class="upload-box">
+
+                    <div class="upload-icon">
+                        🎤
+                    </div>
+
+                    <h2>Choose a WAV audio file</h2>
+
+                    <p>
+                        Click here to select your recording
+                    </p>
+
+                    <p style="margin-top: 10px;">
+                        WAV format only
+                    </p>
+
+                    <div class="file-name" id="fileName">
+                        No file selected
+                    </div>
+
+                    <input
+                        type="file"
+                        id="audio"
+                        name="audio"
+                        class="file-input"
+                        accept=".wav,audio/wav,audio/x-wav"
+                        required
+                    >
+
+                </label>
+
+
+                <div class="button-section">
+
+                    <button
+                        type="submit"
+                        class="verify-btn"
+                        id="verifyButton"
+                    >
+                        🎙️ &nbsp; Verify Audio →
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <!-- ERROR MESSAGE -->
+
+            {% if error %}
+
+                <div class="error-box">
+                    <strong>⚠️ Error:</strong>
+                    {{ error }}
+                </div>
+
+            {% endif %}
+
+
+            <!-- VERIFICATION RESULT -->
+
+            {% if extracted_text %}
+
+                <section class="result-card">
+
+                    <h2>📝 Extracted Speech</h2>
+
+                    <p>{{ extracted_text }}</p>
+
+
+                    <h3>🔍 Verification Result</h3>
+
+                    <div class="verdict">
+                        {{ verdict }}
+                    </div>
+
+
+                    <h3>📊 Confidence</h3>
+
+                    <p class="confidence">
+                        {{ confidence }}%
+                    </p>
+
+
+                    <h3>📄 Explanation</h3>
+
+                    <p>
+                        {{ explanation }}
+                    </p>
+
+
+                    {% if evidence %}
+
+                        <h3>📚 Evidence Information</h3>
+
+                        {% for item in evidence %}
+
+                            <div class="evidence-item">
+
+                                <h4>{{ item.title }}</h4>
+
+                                <p>
+                                    {{ item.description }}
+                                </p>
+
+                                <p style="margin-top: 8px;">
+                                    <strong>Type:</strong>
+                                    {{ item.type }}
+                                </p>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+
+                    <p class="small-note">
+                        Note: This application currently uses a demo
+                        claim-checking function. The confidence score
+                        is not a scientifically calibrated probability,
+                        and the generic evidence information may not
+                        independently prove the claim.
+                    </p>
+
+                </section>
+
+            {% endif %}
+
+
+            <!-- INFORMATION -->
+
+            <div class="info-box">
+
+                <div class="info-icon">
+                    ⓘ
+                </div>
+
+                <p>
+                    Your audio will be transcribed and the extracted
+                    claim will be checked. An internet connection is
+                    required for the current speech recognition method.
+                </p>
+
+            </div>
+
+
+            <!-- FOOTER LINKS -->
+
+            <div class="footer-links">
+
+                <a href="{{ url_for('dashboard') }}">
+                    ← Back to Dashboard
+                </a>
+
+                <a href="{{ url_for('history') }}">
+                    🕘 View History
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FILE NAME AND LOADING SCRIPT -->
+
+    <script>
+
+        const audioInput = document.getElementById("audio");
+        const fileName = document.getElementById("fileName");
+        const audioForm = document.getElementById("audioForm");
+        const verifyButton = document.getElementById("verifyButton");
+
+        audioInput.addEventListener("change", function () {
+
+            if (this.files.length > 0) {
+
+                const file = this.files[0];
+
+                fileName.textContent = "Selected: " + file.name;
+
+                if (!file.name.toLowerCase().endsWith(".wav")) {
+
+                    fileName.textContent =
+                        "Please select a WAV file: " + file.name;
+
+                }
+
+            } else {
+
+                fileName.textContent = "No file selected";
+
+            }
+
+        });
+
+
+        audioForm.addEventListener("submit", function (event) {
+
+            if (!audioInput.files.length) {
+
+                event.preventDefault();
+
+                alert("Please select a WAV audio file.");
+
+                return;
+
+            }
+
+            const file = audioInput.files[0];
+
+            if (!file.name.toLowerCase().endsWith(".wav")) {
+
+                event.preventDefault();
+
+                alert("Please upload a WAV audio file only.");
+
+                return;
+
+            }
+
+            verifyButton.textContent = "⏳ Processing Audio...";
+
+            verifyButton.disabled = true;
+
+        });
+
+    </script>
+
+</body>
+
+</html>

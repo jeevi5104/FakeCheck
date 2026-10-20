@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FakeCheck | History</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #070b16;
+            color: #f1f5f9;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 270px;
+            flex-shrink: 0;
+            background: #0b1020;
+            border-right: 1px solid #202b43;
+            padding: 30px 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 42px;
+            padding-left: 10px;
+            color: #22d3ee;
+        }
+
+        .logo span {
+            color: #8b5cf6;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu-item {
+            display: block;
+            text-decoration: none;
+            color: #a9b8d0;
+            padding: 14px 15px;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: 0.25s;
+        }
+
+        .menu-item:hover {
+            background: #151e35;
+            color: #22d3ee;
+        }
+
+        .menu-item.active {
+            background: linear-gradient(135deg, #172c4a, #25204a);
+            color: #22d3ee;
+            font-weight: bold;
+            border: 1px solid #263958;
+        }
+
+        /* MAIN CONTENT */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 35px 45px;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .top h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+            color: #f8fafc;
+        }
+
+        .top p {
+            color: #9aabc5;
+            line-height: 1.7;
+        }
+
+        .user {
+            background: #111a2e;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #293752;
+            color: #dbeafe;
+            overflow-wrap: anywhere;
+        }
+
+        /* HISTORY CARD */
+
+        .history-card {
+            background: #10182a;
+            border-radius: 18px;
+            padding: 28px;
+            border: 1px solid #26344f;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .history-header h2 {
+            font-size: 22px;
+            color: #f8fafc;
+        }
+
+        .history-count {
+            background: #172747;
+            color: #93c5fd;
+            border: 1px solid #2a4775;
+            padding: 8px 13px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* HISTORY ITEM */
+
+        .history-item {
+            border: 1px solid #293752;
+            border-radius: 15px;
+            padding: 22px;
+            margin-bottom: 18px;
+            background: #0c1425;
+            transition: 0.25s;
+        }
+
+        .history-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .history-item:hover {
+            border-color: #22d3ee;
+            box-shadow: 0 6px 20px rgba(34, 211, 238, 0.06);
+        }
+
+        .claim-section {
+            width: 100%;
+        }
+
+        /* TYPE BADGES */
+
+        .type-badge {
+            display: inline-block;
+            margin-bottom: 13px;
+            padding: 7px 11px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 0.4px;
+        }
+
+        .text-type {
+            background: #1b263a;
+            color: #cbd5e1;
+            border: 1px solid #344256;
+        }
+
+        .image-type {
+            background: #2a1e46;
+            color: #c4b5fd;
+            border: 1px solid #4c3478;
+        }
+
+        .audio-type {
+            background: #12333b;
+            color: #67e8f9;
+            border: 1px solid #225563;
+        }
+
+        /* CLAIM */
+
+        .claim {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.8;
+            color: #e2e8f0;
+            overflow-wrap: anywhere;
+        }
+
+        .image-claim {
+            font-weight: normal;
+            color: #cbd5e1;
+            background: #111b30;
+            padding: 14px;
+            border-radius: 10px;
+            border-left: 3px solid #8b5cf6;
+        }
+
+        .audio-claim {
+            font-weight: normal;
+            color: #cbd5e1;
+            background: #10202d;
+            padding: 14px;
+            border-radius: 10px;
+            border-left: 3px solid #22d3ee;
+        }
+
+        .more-text {
+            color: #67e8f9;
+            font-weight: bold;
+        }
+
+        /* DETAILS */
+
+        .details {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .refuted {
+            background: #3a1822;
+            color: #fca5a5;
+            border: 1px solid #71303c;
+        }
+
+        .supported {
+            background: #123427;
+            color: #86efac;
+            border: 1px solid #216044;
+        }
+
+        .insufficient {
+            background: #3a2b13;
+            color: #fcd34d;
+            border: 1px solid #6d4c1d;
+        }
+
+        .confidence {
+            background: #172747;
+            color: #93c5fd;
+            border: 1px solid #2a4775;
+        }
+
+        /* EXPLANATION */
+
+        .explanation-box {
+            background: #111b30;
+            border: 1px solid #263650;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+
+        .explanation-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #e2e8f0;
+            margin-bottom: 9px;
+        }
+
+        .explanation {
+            color: #a9b8d0;
+            line-height: 1.8;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        /* EMPTY STATE */
+
+        .empty {
+            text-align: center;
+            padding: 65px 20px;
+            color: #a9b8d0;
+        }
+
+        .empty-icon {
+            font-size: 50px;
+            margin-bottom: 18px;
+        }
+
+        .empty h3 {
+            color: #f1f5f9;
+            font-size: 21px;
+            margin-bottom: 10px;
+        }
+
+        .empty p {
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 22px;
+        }
+
+        .empty-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* BUTTONS */
+
+        .verify-btn {
+            display: inline-block;
+            padding: 12px 18px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border: 1px solid #3674f5;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.25s;
+        }
+
+        .verify-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .image-btn {
+            background: #17233b;
+            border-color: #344768;
+            color: #c4b5fd;
+        }
+
+        .image-btn:hover {
+            background: #25204a;
+            color: white;
+        }
+
+        .audio-btn {
+            background: #10313a;
+            border-color: #225563;
+            color: #67e8f9;
+        }
+
+        .audio-btn:hover {
+            background: #164653;
+            color: white;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1000px) {
+            .sidebar {
+                width: 230px;
+            }
+
+            .main {
+                padding: 28px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #26344f;
+                padding: 20px;
+            }
+
+            .logo {
+                margin-bottom: 20px;
+            }
+
+            .menu {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 7px;
+            }
+
+            .menu-item {
+                white-space: nowrap;
+                padding: 11px 12px;
+            }
+
+            .main {
+                padding: 22px;
+            }
+
+            .top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .user {
+                width: 100%;
+            }
+
+            .history-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .main {
+                padding: 15px;
+            }
+
+            .history-card {
+                padding: 16px;
+            }
+
+            .history-item {
+                padding: 16px;
+            }
+
+            .top h1 {
+                font-size: 25px;
+            }
+
+            .badge {
+                white-space: normal;
+            }
+
+            .verify-btn {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            Fake<span>Check</span>
+        </div>
+
+        <nav class="menu">
+
+            <a href="/dashboard" class="menu-item">
+                🏠 &nbsp; Dashboard
+            </a>
+
+            <a href="/verify-text" class="menu-item">
+                ✓ &nbsp; Verify Text
+            </a>
+
+            <a href="/verify-image" class="menu-item">
+                🖼️ &nbsp; Verify Image
+            </a>
+
+            <a href="/verify-audio" class="menu-item">
+                🎙️ &nbsp; Verify Audio
+            </a>
+
+            <a href="/history" class="menu-item active">
+                🕘 &nbsp; History
+            </a>
+
+            <a href="/evidence" class="menu-item">
+                📚 &nbsp; Evidence
+            </a>
+
+            <a href="/profile" class="menu-item">
+                👤 &nbsp; Profile
+            </a>
+
+            <a href="/logout" class="menu-item">
+                🚪 &nbsp; Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <div class="top">
+
+            <div>
+                <h1>Verification History</h1>
+
+                <p>
+                    View your previously verified claims and results.
+                </p>
+            </div>
+
+            <div class="user">
+                👤 {{ user }}
+            </div>
+
+        </div>
+
+        <!-- HISTORY CARD -->
+
+        <div class="history-card">
+
+            <div class="history-header">
+
+                <h2>Previous Verifications</h2>
+
+                {% if history %}
+                    <span class="history-count">
+                        {{ history|length }}
+                        Verification{% if history|length != 1 %}s{% endif %}
+                    </span>
+                {% endif %}
+
+            </div>
+
+            {% if history %}
+
+                {% for item in history %}
+
+                <div class="history-item">
+
+                    <div class="claim-section">
+
+                        <!-- IMAGE VERIFICATION -->
+
+                        {% if item.claim.startswith("[IMAGE]") %}
+
+                            <span class="type-badge image-type">
+                                🖼️ IMAGE VERIFICATION
+                            </span>
+
+                            <div class="claim image-claim">
+                                {{ item.claim[7:][:250] }}
+
+                                {% if item.claim[7:]|length > 250 %}
+                                    <span class="more-text">...</span>
+                                {% endif %}
+                            </div>
+
+                        <!-- AUDIO VERIFICATION -->
+
+                        {% elif item.claim.startswith("[AUDIO]") %}
+
+                            <span class="type-badge audio-type">
+                                🎙️ AUDIO VERIFICATION
+                            </span>
+
+                            <div class="claim audio-claim">
+                                {{ item.claim[7:][:250] }}
+
+                                {% if item.claim[7:]|length > 250 %}
+                                    <span class="more-text">...</span>
+                                {% endif %}
+                            </div>
+
+                        <!-- TEXT VERIFICATION -->
+
+                        {% else %}
+
+                            <span class="type-badge text-type">
+                                📄 TEXT VERIFICATION
+                            </span>
+
+                            <div class="claim">
+                                {{ item.claim }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    <!-- VERDICT + CONFIDENCE -->
+
+                    <div class="details">
+
+                        {% if item.verdict == "REFUTED" %}
+
+                            <span class="badge refuted">
+                                ✕ &nbsp; REFUTED
+                            </span>
+
+                        {% elif item.verdict == "SUPPORTED" %}
+
+                            <span class="badge supported">
+                                ✓ &nbsp; SUPPORTED
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge insufficient">
+                                ⚠ &nbsp; INSUFFICIENT EVIDENCE
+                            </span>
+
+                        {% endif %}
+
+                        <span class="badge confidence">
+                            Confidence: {{ item.confidence }}%
+                        </span>
+
+                    </div>
+
+                    <!-- EXPLANATION -->
+
+                    <div class="explanation-box">
+
+                        <div class="explanation-title">
+                            Verification Analysis
+                        </div>
+
+                        <div class="explanation">
+                            {{ item.explanation }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <!-- EMPTY STATE -->
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        🕘
+                    </div>
+
+                    <h3>No verification history yet</h3>
+
+                    <p>
+                        Verify a claim to see your results here.
+                    </p>
+
+                    <div class="empty-buttons">
+
+                        <a href="/verify-text" class="verify-btn">
+                            ✓ Verify Text
+                        </a>
+
+                        <a href="/verify-image" class="verify-btn image-btn">
+                            🖼️ Verify Image
+                        </a>
+
+                        <a href="/verify-audio" class="verify-btn audio-btn">
+                            🎙️ Verify Audio
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

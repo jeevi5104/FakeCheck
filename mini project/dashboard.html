@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FakeCheck | Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #070b18;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 270px;
+            background: #0b1020;
+            border-right: 1px solid #202a43;
+            padding: 35px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+            margin-left: 12px;
+            margin-bottom: 55px;
+        }
+
+        .logo span {
+            color: #20d8e8;
+        }
+
+        .logo strong {
+            color: #7c5cff;
+        }
+
+        .menu-title {
+            color: #687899;
+            font-size: 13px;
+            margin: 0 12px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            text-decoration: none;
+            color: #9aa8c7;
+            padding: 16px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+        .menu-item:hover {
+            background: #17203a;
+            color: white;
+        }
+
+        .menu-item.active {
+            background: linear-gradient(90deg, #12384d, #1a1d3d);
+            color: #20d8e8;
+        }
+
+        .logout {
+            margin-top: 100px;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 270px;
+            flex: 1;
+            padding: 50px;
+            max-width: 1600px;
+            min-width: 0;
+        }
+
+        /* HERO */
+
+        .hero {
+            background:
+                radial-gradient(circle at 90% 20%, #122642, transparent 30%),
+                #10172a;
+            border: 1px solid #27334e;
+            border-radius: 22px;
+            padding: 45px;
+            margin-bottom: 35px;
+        }
+
+        .top-label {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 30px;
+            background: #102c3b;
+            color: #20d8e8;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 44px;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 span {
+            color: #20d8e8;
+        }
+
+        .hero p {
+            color: #8795b5;
+            font-size: 17px;
+            line-height: 1.7;
+            max-width: 900px;
+        }
+
+        /* STATISTICS */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: #10172a;
+            border: 1px solid #27334e;
+            border-radius: 18px;
+            padding: 25px;
+            transition: 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: #20d8e8;
+        }
+
+        .stat-number {
+            font-size: 34px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #20d8e8;
+        }
+
+        .stat-label {
+            color: #8795b5;
+            font-size: 14px;
+        }
+
+        /* SECTION */
+
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 22px;
+        }
+
+        /* VERIFICATION CARDS */
+
+        .verify-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+            margin-bottom: 30px;
+        }
+
+        .verify-card {
+            background: #10172a;
+            border: 1px solid #27334e;
+            border-radius: 18px;
+            padding: 28px;
+            transition: 0.2s;
+            min-width: 0;
+        }
+
+        .verify-card:hover {
+            transform: translateY(-3px);
+            border-color: #20d8e8;
+        }
+
+        .icon {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #17233f;
+            border-radius: 14px;
+            font-size: 28px;
+            margin-bottom: 22px;
+        }
+
+        .verify-card h3 {
+            font-size: 21px;
+            margin-bottom: 12px;
+        }
+
+        .verify-card p {
+            color: #8795b5;
+            line-height: 1.6;
+            min-height: 70px;
+            margin-bottom: 20px;
+        }
+
+        /* BUTTONS */
+
+        .verify-btn {
+            display: inline-block;
+            padding: 13px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            background: linear-gradient(90deg, #20d8e8, #7858ff);
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .verify-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .audio-btn {
+            background: linear-gradient(90deg, #20d8e8, #7858ff);
+            color: white;
+        }
+
+        /* BOTTOM */
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(250px, 1fr);
+            gap: 22px;
+        }
+
+        /* RECENT VERIFICATIONS */
+
+        .recent-box {
+            background: #10172a;
+            border: 1px solid #27334e;
+            border-radius: 18px;
+            padding: 30px;
+            min-width: 0;
+        }
+
+        .recent-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .recent-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 18px 0;
+            border-bottom: 1px solid #202a43;
+        }
+
+        .recent-item:last-child {
+            border-bottom: none;
+        }
+
+        .recent-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .recent-icon {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            border-radius: 10px;
+            background: #17233f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .recent-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .recent-info strong {
+            display: block;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 600px;
+        }
+
+        .recent-info span {
+            color: #687899;
+            font-size: 13px;
+        }
+
+        /* VERDICT */
+
+        .verdict-badge {
+            display: inline-block;
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .supported {
+            background: #103d35;
+            color: #34d399;
+        }
+
+        .refuted {
+            background: #421d25;
+            color: #fb7185;
+        }
+
+        .insufficient {
+            background: #3d3218;
+            color: #fbbf24;
+        }
+
+        /* EVIDENCE */
+
+        .evidence-box {
+            background: #10172a;
+            border: 1px solid #27334e;
+            border-radius: 18px;
+            padding: 30px;
+        }
+
+        .evidence-box h2 {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        .confidence-number {
+            text-align: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: #20d8e8;
+            margin-bottom: 5px;
+        }
+
+        .confidence-label {
+            text-align: center;
+            color: #8795b5;
+            margin-bottom: 25px;
+        }
+
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: #27334e;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #20d8e8, #7858ff);
+            transition: width 0.5s;
+        }
+
+        .evidence-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 13px 0;
+            border-bottom: 1px solid #202a43;
+            color: #8795b5;
+        }
+
+        .evidence-row strong {
+            color: #20d8e8;
+        }
+
+        /* EMPTY */
+
+        .empty-message {
+            padding: 25px 0;
+            color: #687899;
+            text-align: center;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1200px) {
+            .main {
+                padding: 30px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .verify-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                width: 190px;
+                padding: 25px 12px;
+            }
+
+            .logo {
+                font-size: 24px;
+                margin-left: 8px;
+                margin-bottom: 35px;
+            }
+
+            .main {
+                margin-left: 190px;
+                padding: 18px;
+            }
+
+            .hero {
+                padding: 25px;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .recent-box,
+            .evidence-box {
+                padding: 20px;
+            }
+
+            .recent-item {
+                align-items: flex-start;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <span>Fake</span><strong>Check</strong>
+        </div>
+
+        <div class="menu-title">
+            MAIN MENU
+        </div>
+
+        <a href="/dashboard" class="menu-item active">
+            📊 &nbsp; Dashboard
+        </a>
+
+        <a href="/verify-text" class="menu-item">
+            🔍 &nbsp; Verify Text
+        </a>
+
+        <a href="/verify-image" class="menu-item">
+            🖼️ &nbsp; Verify Image
+        </a>
+
+        <a href="/verify-audio" class="menu-item">
+            🎙️ &nbsp; Verify Audio
+        </a>
+
+        <a href="/history" class="menu-item">
+            🕘 &nbsp; History
+        </a>
+
+        <a href="/evidence" class="menu-item">
+            📚 &nbsp; Evidence
+        </a>
+
+        <a href="/profile" class="menu-item">
+            👤 &nbsp; Profile
+        </a>
+
+        <a href="/logout" class="menu-item logout">
+            🚪 &nbsp; Logout
+        </a>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div class="top-label">
+                🛡️ FAKECHECK VERIFICATION SYSTEM
+            </div>
+
+            <h1>
+                Verify Before You
+                <span>Believe.</span>
+            </h1>
+
+            <p>
+                Analyze claims, investigate evidence, and
+                understand the information you encounter.
+                FakeCheck helps you verify information using
+                an evidence-based approach.
+            </p>
+
+        </section>
+
+        <!-- STATISTICS -->
+
+        <h2 class="section-title">
+            Verification Overview
+        </h2>
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-number">{{ total }}</div>
+                <div class="stat-label">Total Verifications</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number">{{ supported }}</div>
+                <div class="stat-label">Supported Claims</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number">{{ refuted }}</div>
+                <div class="stat-label">Refuted Claims</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number">{{ insufficient }}</div>
+                <div class="stat-label">Insufficient Evidence</div>
+            </div>
+
+        </div>
+
+        <!-- VERIFY OPTIONS -->
+
+        <h2 class="section-title">
+            Choose What You Want to Verify
+        </h2>
+
+        <div class="verify-grid">
+
+            <!-- TEXT -->
+
+            <div class="verify-card">
+
+                <div class="icon">📄</div>
+
+                <h3>Verify Text</h3>
+
+                <p>
+                    Enter a claim, statement, or news text
+                    and investigate the evidence behind it.
+                </p>
+
+                <a href="/verify-text" class="verify-btn">
+                    Verify Text →
+                </a>
+
+            </div>
+
+            <!-- IMAGE -->
+
+            <div class="verify-card">
+
+                <div class="icon">🖼️</div>
+
+                <h3>Verify Image</h3>
+
+                <p>
+                    Upload an image containing a claim.
+                    FakeCheck extracts the text from the
+                    image and checks it against the evidence.
+                </p>
+
+                <a href="/verify-image" class="verify-btn">
+                    Verify Image →
+                </a>
+
+            </div>
+
+            <!-- AUDIO -->
+
+            <div class="verify-card">
+
+                <div class="icon">🎙️</div>
+
+                <h3>Verify Audio</h3>
+
+                <p>
+                    Upload a WAV audio recording.
+                    FakeCheck converts speech into text
+                    and checks the extracted claim.
+                </p>
+
+                <a href="{{ url_for('verify_audio') }}"
+                   class="verify-btn audio-btn">
+                    Verify Audio →
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- BOTTOM SECTION -->
+
+        <div class="bottom-grid">
+
+            <!-- RECENT HISTORY -->
+
+            <div class="recent-box">
+
+                <h2 class="recent-title">
+                    Recent Verifications
+                </h2>
+
+                {% if recent_history %}
+
+                    {% for item in recent_history %}
+
+                        <div class="recent-item">
+
+                            <div class="recent-left">
+
+                                <div class="recent-icon">
+
+                                    {% if item.claim.startswith("[IMAGE]") %}
+                                        🖼️
+                                    {% elif item.claim.startswith("[AUDIO]") %}
+                                        🎙️
+                                    {% else %}
+                                        📄
+                                    {% endif %}
+
+                                </div>
+
+                                <div class="recent-info">
+
+                                    <strong>
+
+                                        {% if item.claim.startswith("[IMAGE]") %}
+                                            {{ item.claim[7:][:180] }}
+                                            {% if item.claim[7:]|length > 180 %}...{% endif %}
+
+                                        {% elif item.claim.startswith("[AUDIO]") %}
+                                            {{ item.claim[7:][:180] }}
+                                            {% if item.claim[7:]|length > 180 %}...{% endif %}
+
+                                        {% else %}
+                                            {{ item.claim[:180] }}
+                                            {% if item.claim|length > 180 %}...{% endif %}
+                                        {% endif %}
+
+                                    </strong>
+
+                                    <span>
+
+                                        {% if item.claim.startswith("[IMAGE]") %}
+                                            Image Verification
+
+                                        {% elif item.claim.startswith("[AUDIO]") %}
+                                            Audio Verification
+
+                                        {% else %}
+                                            Text Verification
+                                        {% endif %}
+
+                                        &nbsp; • &nbsp;
+                                        {{ item.confidence }}% confidence
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            {% if item.verdict == "SUPPORTED" %}
+
+                                <span class="verdict-badge supported">
+                                    SUPPORTED
+                                </span>
+
+                            {% elif item.verdict == "REFUTED" %}
+
+                                <span class="verdict-badge refuted">
+                                    REFUTED
+                                </span>
+
+                            {% else %}
+
+                                <span class="verdict-badge insufficient">
+                                    INSUFFICIENT
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty-message">
+                        No verification history yet.
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- VERIFICATION INSIGHT -->
+
+            <div class="evidence-box">
+
+                <h2>Verification Insight</h2>
+
+                {% if total > 0 %}
+
+                    <div class="confidence-number">
+                        {{ ((supported + refuted) * 100 // total) }}%
+                    </div>
+
+                    <div class="confidence-label">
+                        Verification Coverage
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar"
+                             style="width: {{ ((supported + refuted) * 100 // total) }}%;">
+                        </div>
+                    </div>
+
+                {% else %}
+
+                    <div class="confidence-number">0%</div>
+
+                    <div class="confidence-label">
+                        No Verifications Yet
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 0%;"></div>
+                    </div>
+
+                {% endif %}
+
+                <div class="evidence-row">
+                    <span>Supported Claims</span>
+                    <strong>{{ supported }}</strong>
+                </div>
+
+                <div class="evidence-row">
+                    <span>Refuted Claims</span>
+                    <strong>{{ refuted }}</strong>
+                </div>
+
+                <div class="evidence-row">
+                    <span>Insufficient Evidence</span>
+                    <strong>{{ insufficient }}</strong>
+                </div>
+
+                <div class="evidence-row">
+                    <span>Verification Status</span>
+                    <strong>Active</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FakeCheck | Verify Text</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #070b18;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            width: 270px;
+            background: #0b1020;
+            border-right: 1px solid #202a43;
+            padding: 35px 20px;
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+            margin-left: 12px;
+            margin-bottom: 55px;
+        }
+
+        .logo span {
+            color: #20d8e8;
+        }
+
+        .logo strong {
+            color: #7c5cff;
+        }
+
+        .menu-title {
+            color: #687899;
+            font-size: 13px;
+            margin: 0 12px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            text-decoration: none;
+            color: #9aa8c7;
+            padding: 16px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+        .menu-item:hover {
+            background: #17203a;
+            color: white;
+        }
+
+        .menu-item.active {
+            background: linear-gradient(
+                90deg,
+                #12384d,
+                #1a1d3d
+            );
+
+            color: #20d8e8;
+        }
+
+        .logout {
+            margin-top: 250px;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .main {
+            flex: 1;
+            padding: 50px;
+            max-width: 1300px;
+        }
+
+
+        /* ================= TOP LABEL ================= */
+
+        .top-label {
+            display: inline-block;
+
+            padding: 9px 18px;
+
+            border-radius: 30px;
+
+            background: #102c3b;
+
+            color: #20d8e8;
+
+            font-size: 13px;
+
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        h1 span {
+            color: #20d8e8;
+        }
+
+        .subtitle {
+            color: #8795b5;
+            font-size: 17px;
+            margin-bottom: 40px;
+        }
+
+
+        /* ================= VERIFY BOX ================= */
+
+        .verify-box {
+            background: #10172a;
+
+            border: 1px solid #27334e;
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            max-width: 1000px;
+        }
+
+        .verify-box h2 {
+            font-size: 23px;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #8492b1;
+
+            margin-bottom: 25px;
+
+            line-height: 1.6;
+        }
+
+
+        /* ================= TEXTAREA ================= */
+
+        textarea {
+            width: 100%;
+
+            min-height: 220px;
+
+            resize: vertical;
+
+            background: #080d1c;
+
+            border: 1px solid #2a3857;
+
+            border-radius: 12px;
+
+            color: white;
+
+            padding: 20px;
+
+            font-size: 16px;
+
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #20d8e8;
+        }
+
+        textarea::placeholder {
+            color: #596780;
+        }
+
+
+        /* ================= BOTTOM ================= */
+
+        .bottom {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-top: 20px;
+        }
+
+        .hint {
+            color: #687899;
+            font-size: 14px;
+        }
+
+
+        /* ================= BUTTON ================= */
+
+        button {
+            border: none;
+
+            border-radius: 10px;
+
+            padding: 14px 28px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            color: white;
+
+            cursor: pointer;
+
+            background: linear-gradient(
+                90deg,
+                #20d8e8,
+                #7858ff
+            );
+
+            transition: 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* ================= ERROR ================= */
+
+        .error {
+            margin-top: 20px;
+
+            padding: 15px;
+
+            background: #3a1820;
+
+            border: 1px solid #8b3040;
+
+            border-radius: 10px;
+
+            color: #ff8f9d;
+        }
+
+
+        /* ================= RESULT ================= */
+
+        .result {
+            margin-top: 30px;
+
+            background: #10172a;
+
+            border: 1px solid #27334e;
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            max-width: 1000px;
+        }
+
+        .result-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .result-card {
+            background: #080d1c;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            margin-bottom: 15px;
+        }
+
+        .result-label {
+            color: #71809e;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 18px;
+        }
+
+
+        /* ================= CONFIDENCE ================= */
+
+        .confidence {
+            color: #20d8e8;
+
+            font-size: 28px;
+
+            font-weight: bold;
+        }
+
+
+        /* ================= EVIDENCE RESULT ================= */
+
+        .evidence {
+            color: #aab5cc;
+
+            line-height: 1.6;
+        }
+
+        .evidence-item {
+            margin-top: 15px;
+
+            padding-top: 15px;
+
+            border-top: 1px solid #202a43;
+        }
+
+        .evidence-title {
+            font-size: 16px;
+
+            font-weight: bold;
+
+            color: white;
+        }
+
+        .evidence-description {
+            color: #8492b1;
+
+            margin-top: 6px;
+
+            line-height: 1.5;
+        }
+
+        .evidence-type {
+            color: #20d8e8;
+
+            margin-top: 6px;
+
+            font-size: 13px;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="layout">
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+
+        <!-- LOGO -->
+
+        <div class="logo">
+
+            <span>Fake</span><strong>Check</strong>
+
+        </div>
+
+
+        <!-- MENU TITLE -->
+
+        <div class="menu-title">
+
+            MAIN MENU
+
+        </div>
+
+
+        <!-- DASHBOARD -->
+
+        <a href="/dashboard"
+           class="menu-item">
+
+            📊 &nbsp; Dashboard
+
+        </a>
+
+
+        <!-- VERIFY -->
+
+        <a href="/verify-text"
+           class="menu-item active">
+
+            🔍 &nbsp; Verify
+
+        </a>
+
+
+        <!-- HISTORY -->
+
+        <a href="/history"
+           class="menu-item">
+
+            🕘 &nbsp; History
+
+        </a>
+
+
+        <!-- EVIDENCE -->
+
+        <a href="/evidence"
+           class="menu-item">
+
+            📚 &nbsp; Evidence
+
+        </a>
+
+
+        <!-- PROFILE -->
+
+        <a href="/profile"
+           class="menu-item">
+
+            👤 &nbsp; Profile
+
+        </a>
+
+
+        <!-- LOGOUT -->
+
+        <a href="/logout"
+           class="menu-item logout">
+
+            🚪 &nbsp; Logout
+
+        </a>
+
+
+    </aside>
+
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main">
+
+
+        <!-- TOP LABEL -->
+
+        <div class="top-label">
+
+            🔍 TEXT VERIFICATION
+
+        </div>
+
+
+        <!-- TITLE -->
+
+        <h1>
+
+            Verify <span>Information.</span>
+
+        </h1>
+
+
+        <!-- SUBTITLE -->
+
+        <p class="subtitle">
+
+            Enter a claim, statement, or news text and investigate
+            the evidence behind it.
+
+        </p>
+
+
+
+        <!-- ================= INPUT BOX ================= -->
+
+        <div class="verify-box">
+
+
+            <h2>
+
+                Enter the information you want to verify
+
+            </h2>
+
+
+            <p class="description">
+
+                Paste a news claim, social media statement, or any
+                information that you want FakeCheck to investigate.
+
+            </p>
+
+
+            <!-- BACKEND FORM -->
+
+            <form action="/verify" method="POST">
+
+
+                <textarea
+                    name="claim"
+                    placeholder="Example: Earth is flat"
+                    required>{{ claim if claim else '' }}</textarea>
+
+
+                <div class="bottom">
+
+
+                    <div class="hint">
+
+                        💡 Enter a complete claim for better analysis.
+
+                    </div>
+
+
+                    <button type="submit">
+
+                        Verify Claim →
+
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+
+        <!-- ================= ERROR ================= -->
+
+        {% if error %}
+
+        <div class="error">
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- ================= RESULT ================= -->
+
+        {% if claim %}
+
+        <div class="result">
+
+
+            <div class="result-title">
+
+                🔎 Verification Result
+
+            </div>
+
+
+
+            <!-- CLAIM -->
+
+            <div class="result-card">
+
+
+                <div class="result-label">
+
+                    CLAIM
+
+                </div>
+
+
+                <div class="result-value">
+
+                    {{ claim }}
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- VERDICT -->
+
+            <div class="result-card">
+
+
+                <div class="result-label">
+
+                    VERDICT
+
+                </div>
+
+
+                <div class="result-value">
+
+                    {{ verdict }}
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- CONFIDENCE -->
+
+            <div class="result-card">
+
+
+                <div class="result-label">
+
+                    CONFIDENCE
+
+                </div>
+
+
+                <div class="confidence">
+
+                    {{ confidence }}%
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- EVIDENCE INSIGHT -->
+
+            <div class="result-card">
+
+
+                <div class="result-label">
+
+                    EVIDENCE INSIGHT
+
+                </div>
+
+
+                <div class="evidence">
+
+                    {{ explanation }}
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- EVIDENCE -->
+
+            {% if evidence %}
+
+            <div class="result-card">
+
+
+                <div class="result-label">
+
+                    EVIDENCE
+
+                </div>
+
+
+                {% for item in evidence %}
+
+
+                <div class="evidence-item">
+
+
+                    <div class="evidence-title">
+
+                        {{ item.title }}
+
+                    </div>
+
+
+                    <div class="evidence-description">
+
+                        {{ item.description }}
+
+                    </div>
+
+
+                    <div class="evidence-type">
+
+                        {{ item.type }}
+
+                    </div>
+
+
+                </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+        {% endif %}
+
+
+    </main>
+
+
+</div>
+
+
+</body>
+
+</html>

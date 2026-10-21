@@ -33,12 +33,15 @@ app.config["MAX_CONTENT_LENGTH"] = 15 * 1024 * 1024
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(AUDIO_UPLOAD_FOLDER, exist_ok=True)
 
-# Configure Tesseract OCR.
-pytesseract.pytesseract.tesseract_cmd = (
-    r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-)
+# Tesseract configuration for Windows and Linux
 
-# Enable application logs.
+if os.name == "nt":
+    pytesseract.pytesseract.tesseract_cmd = (
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    )
+else:
+    pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
+
 logging.basicConfig(level=logging.INFO)
 
 

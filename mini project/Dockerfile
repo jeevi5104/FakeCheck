@@ -13,5 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 ENV PORT=10000
+ENV TESSERACT_CMD=/usr/bin/tesseract
 
 CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app:app"]

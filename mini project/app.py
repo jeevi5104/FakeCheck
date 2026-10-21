@@ -424,6 +424,7 @@ def verify_image():
 
 
 # ============================================================
+# ============================================================
 # VERIFY IMAGE
 # ============================================================
 
@@ -452,6 +453,7 @@ def verify_image_upload():
     image_path = None
 
     try:
+        # Save uploaded image temporarily
         fd, image_path = tempfile.mkstemp(
             suffix=".img",
             dir=UPLOAD_FOLDER
@@ -460,27 +462,52 @@ def verify_image_upload():
 
         image_file.save(image_path)
 
-        with Image.open(image_path) as image:
+        # Open and validate the image
+        with Image.open(image_path) as original_image:
+
+            # Check image dimensions before processing
+            original_image.verify()
+
+        with Image.open(image_path) as original_image:
+
+            # Convert to RGB or grayscale to reduce processing overhead
+            image = original_image.convert("L")
+
+            # Resize large images to a maximum dimension of 1200 px
+            max_dimension = 1200
+
+            if max(image.size) > max_dimension:
+                image.thumbnail(
+                    (max_dimension, max_dimension),
+                    Image.Resampling.LANCZOS
+                )
+
+            # Limit OCR execution time to prevent long-running processing
             extracted_text = pytesseract.image_to_string(
-                image
+                image,
+                timeout=15,
+                config="--psm 6"
             ).strip()
 
+        # Check if OCR found readable text
         if not extracted_text:
             return render_template(
                 "verify_image.html",
                 user=session["user"],
                 error=(
                     "No readable text found. "
-                    "Please upload a clearer image."
+                    "Please upload a clear image containing text."
                 )
             )
 
+        # Verify extracted text
         verdict, confidence, explanation = check_claim(
             extracted_text
         )
 
         evidence = get_evidence()
 
+        # Save verification history
         save_history(
             session["user"],
             "[IMAGE] " + extracted_text,
@@ -499,6 +526,30 @@ def verify_image_upload():
             evidence=evidence
         )
 
+    except pytesseract.TesseractNotFoundError:
+        app.logger.exception("Tesseract OCR executable not found")
+
+        return render_template(
+            "verify_image.html",
+            user=session["user"],
+            error=(
+                "OCR service is unavailable. "
+                "Please try again later."
+            )
+        )
+
+    except RuntimeError:
+        app.logger.exception("Image OCR timed out or failed")
+
+        return render_template(
+            "verify_image.html",
+            user=session["user"],
+            error=(
+                "Image processing took too long. "
+                "Please upload a smaller, clearer image."
+            )
+        )
+
     except Exception:
         app.logger.exception("Image verification failed")
 
@@ -506,8 +557,8 @@ def verify_image_upload():
             "verify_image.html",
             user=session["user"],
             error=(
-                "Unable to process the image. "
-                "Check that Tesseract OCR is installed correctly."
+                "Unable to process this image. "
+                "Please try another PNG, JPG, JPEG or WEBP image."
             )
         )
 
@@ -516,7 +567,9 @@ def verify_image_upload():
             try:
                 os.remove(image_path)
             except OSError:
-                app.logger.warning("Unable to remove temporary image.")
+                app.logger.warning(
+                    "Unable to remove temporary image."
+                )
 
 
 # ============================================================
